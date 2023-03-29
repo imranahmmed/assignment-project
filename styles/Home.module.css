@@ -54,10 +54,10 @@
   transition: background 200ms, border 200ms;
 }
 
-.card span {
+/* .card span {
   display: inline-block;
   transition: transform 200ms;
-}
+} */
 
 .card h2 {
   font-weight: 600;
