@@ -42,7 +42,6 @@ export default function Login() {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
         setFormErrData({ ...formErrData, [name]: "" })
-        console.log(formData);
     }
 
     const handleLoginSubmit = async () => {
@@ -103,7 +102,6 @@ export default function Login() {
             } else {
                 console.log(loggedinUser.data.message)
             }
-            console.log(loggedinUser)
         }
     }
 

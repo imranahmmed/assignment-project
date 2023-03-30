@@ -37,7 +37,6 @@ const ProductId = () => {
     }
 
     const { main_image, product_name, price, short_description } = productDetails
-    console.log(productDetails)
     useEffect(() => {
         getProductDetails()
     }, [])
@@ -91,7 +90,6 @@ const ProductId = () => {
             product_qty: formData.product_qty,
         }, config)
 
-        console.log(newProduct)
     }
 
 

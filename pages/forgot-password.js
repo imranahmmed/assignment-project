@@ -13,6 +13,7 @@ import Button from '@/components/Button'
 import Link from 'next/link'
 import ErrorMsg from '@/components/ErrorMsg';
 import { useRouter } from 'next/router';
+import { toast } from 'react-toastify';
 
 export default function ForgotPassword() {
 	let [showPass, setSetShowPass] = useState(false);
@@ -58,9 +59,7 @@ export default function ForgotPassword() {
 			}, config)
 
 			router.push('/login')
-			console.log(updatePassword)
 		}
-		console.log(formErrData)
 	}
 
 
@@ -88,10 +87,19 @@ export default function ForgotPassword() {
 
 		if (sendOtp.data.success == true) {
 			setSentOTP(true)
+			toast.success('OTP Sent Successfully.', {
+				position: "top-right",
+				autoClose: 5000,
+				hideProgressBar: false,
+				closeOnClick: true,
+				pauseOnHover: true,
+				draggable: true,
+				progress: undefined,
+				theme: "light",
+			});
 		} else {
 			setSentOTPErr(sendOtp.data.message)
 		}
-		console.log(sendOtp)
 	}
 
 	const handleVerifyOtp = async () => {
@@ -107,18 +115,21 @@ export default function ForgotPassword() {
 		}, config)
 
 		if (verifyOtp.data.success == true) {
+			toast.success('OTP Verified Successfully.', {
+				position: "top-right",
+				autoClose: 5000,
+				hideProgressBar: false,
+				closeOnClick: true,
+				pauseOnHover: true,
+				draggable: true,
+				progress: undefined,
+				theme: "light",
+			});
 			setVerifiedOTP(true)
 		} else {
 			setVerifiedOTPErr(verifyOtp.data.message)
 		}
-		console.log(verifyOtp)
 	}
-
-
-
-
-
-
 
 	return (
 		<>

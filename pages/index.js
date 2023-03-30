@@ -107,10 +107,6 @@ export default function Home({ params }) {
 					theme: "light",
 				});
 			}
-
-			console.log(response.data)
-
-
 		}
 	}
 

@@ -70,15 +70,10 @@ export default function CreateProduct() {
         setFormErrData({ ...formErrData, [name]: "" })
     }
 
-    console.log(formData);
-
-
-
     const handleProductAdd = async (e) => {
         e.preventDefault()
         const formImageData = new FormData()
         formImageData.append('main_image', mainImage)
-        console.log("formdata", formImageData.entries())
 
         let url = `https://dev.funnelliner.com/api/v1/client/products`
         let config = {
