@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Head from 'next/head';
 import styles from '@/styles/Home.module.css';
 import InputBox from '@/components/InputBox';
@@ -11,12 +11,21 @@ import Button from '@/components/Button';
 import Link from 'next/link';
 import axios from 'axios';
 import { useRouter } from 'next/router';
+import { toast } from 'react-toastify';
+import { useSelector } from 'react-redux';
 
 export default function Home({ params }) {
 	const router = useRouter()
+	const userAuthData = useSelector(state => state)
+
+	useEffect(() => {
+		if (userAuthData.authData.userInfo) {
+			router.push('/product')
+		}
+	}, [])
+
 	let [showPass, setSetShowPass] = useState(false);
 	let [showConfirmPass, setSetShowConfirmPass] = useState(false);
-
 	let [registrationData, setRegistrationData] = useState({
 		registerEmail: "",
 		registerFullName: "",
@@ -73,8 +82,35 @@ export default function Home({ params }) {
 				password_confirmation: registrationData.registerConfirmPassword,
 			}, config)
 
+			if (response.data.success == true) {
+				toast.success('Registration Successfull.', {
+					position: "top-right",
+					autoClose: 5000,
+					hideProgressBar: false,
+					closeOnClick: true,
+					pauseOnHover: true,
+					draggable: true,
+					progress: undefined,
+					theme: "light",
+				});
+
+				router.push('/login')
+			} else {
+				toast.danger('Registration Failed.', {
+					position: "top-right",
+					autoClose: 5000,
+					hideProgressBar: false,
+					closeOnClick: true,
+					pauseOnHover: true,
+					draggable: true,
+					progress: undefined,
+					theme: "light",
+				});
+			}
+
 			console.log(response.data)
-			router.push('/login')
+
+
 		}
 	}
 
@@ -91,7 +127,7 @@ export default function Home({ params }) {
 			<main className={styles.main}>
 				<Div className="flex flex-col">
 					<Div className={styles.card}>
-						<Typhography as="h1" className="text-3xl font-bold underline mb-2">Registration</Typhography>
+						<Typhography as="h1" className="text-3xl font-bold underline mb-2 text-white">Registration</Typhography>
 						<Typhography as='small' className='heading text-[#f3f4ff] text-xl font-medium opacity-50'>Free register and you can enjoy it</Typhography>
 
 						<Div className="flex flex-col mt-5">

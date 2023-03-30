@@ -21,8 +21,12 @@ export default function Login() {
     const dispatch = useDispatch();
     const router = useRouter()
     let [showPass, setSetShowPass] = useState(false);
+    useEffect(() => {
+        if (userAuthData.authData.userInfo) {
+            router.push('/product')
+        }
+    }, [])
 
-    console.log(userAuthData)
 
     const [formData, setFormData] = useState({
         email: "",
@@ -95,7 +99,7 @@ export default function Login() {
                     success: loggedinUser.data.success,
                 }));
 
-                router.push('/product/create-product')
+                router.push('/product')
             } else {
                 console.log(loggedinUser.data.message)
             }
@@ -119,7 +123,7 @@ export default function Login() {
             <main className={styles.main}>
                 <Div className="flex flex-col">
                     <Div className={styles.card}>
-                        <Typhography as="h1" className="text-3xl font-bold underline mb-2">Login</Typhography>
+                        <Typhography as="h1" className="text-3xl font-bold underline mb-2 text-white">Login</Typhography>
                         <Typhography as='small' className='heading text-[#f3f4ff] text-xl font-medium opacity-50'>You can login enjoy it</Typhography>
 
                         <Div className="flex flex-col mt-5">
@@ -133,10 +137,10 @@ export default function Login() {
                                 </Div>
 
                                 {formErrData.email &&
-									<ErrorMsg className='bg-red-500 text-left text-white px-5 py-3 mt-3 font-medium text-lg rounded'>
-										<Typhography as='h3'>{formErrData.email}</Typhography>
-									</ErrorMsg>
-								}
+                                    <ErrorMsg className='bg-red-500 text-left text-white px-5 py-3 mt-3 font-medium text-lg rounded'>
+                                        <Typhography as='h3'>{formErrData.email}</Typhography>
+                                    </ErrorMsg>
+                                }
                             </Div>
 
                             <Div className="block mb-5">
@@ -157,10 +161,10 @@ export default function Login() {
                                     }
                                 </Div>
                                 {formErrData.password &&
-									<ErrorMsg className='bg-red-500 text-left text-white px-5 py-3 mt-3 font-medium text-lg rounded'>
-										<Typhography as='h3'>{formErrData.password}</Typhography>
-									</ErrorMsg>
-								}
+                                    <ErrorMsg className='bg-red-500 text-left text-white px-5 py-3 mt-3 font-medium text-lg rounded'>
+                                        <Typhography as='h3'>{formErrData.password}</Typhography>
+                                    </ErrorMsg>
+                                }
                             </Div>
                         </Div>
 
