@@ -1,5 +1,5 @@
 import { useRouter } from "next/router"
-const ProductSlug = () => {
+const ProductId = () => {
     const router = useRouter()
     const slug = router.query.product_slug
     return (
@@ -7,4 +7,4 @@ const ProductSlug = () => {
     )
 }
 
-export default ProductSlug
+export default ProductId

@@ -11,7 +11,6 @@ import axios from 'axios';
 import { useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import ErrorMsg from '@/components/ErrorMsg';
-
 // maboqaq@mailinator.com
 // Pa$$w0rd!
 
@@ -23,14 +22,20 @@ export default function CreateProduct() {
     const userId = userAuthData.authData.userInfo.id
     const shopId = userAuthData.authData.userInfo.shop_id
 
-    console.log(userAuthData.authData.userInfo)
-
     const [mainImage, setMainImage] = useState([])
+    const [deliveryCharge, setDeliveryCharge] = useState("")
+    const [deliveryLocation, setDeliveryLocation] = useState("")
 
     const onImageChange = (e) => {
         setMainImage(e.target.files[0]);
     }
-    console.log(mainImage)
+    const handledeliverylocationChange = (e) => {
+        setDeliveryLocation(e);
+    }
+    console.log(deliveryLocation)
+    const handledeliveryChargeChange = (e) => {
+        setDeliveryCharge(e.target.value)
+    }
 
     const [formData, setFormData] = useState({
         category_name: "",
@@ -40,7 +45,7 @@ export default function CreateProduct() {
         product_code: "",
         product_qty: "",
         status: "",
-        delivery_charge: "",
+        delivery_charge: deliveryCharge,
         inside_dhaka: "",
         outside_dhaka: "",
     });
@@ -62,38 +67,46 @@ export default function CreateProduct() {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
         setFormErrData({ ...formErrData, [name]: "" })
-        console.log(formData);
     }
+    
+    console.log(formData);
+
 
 
     const handleProductAdd = async (e) => {
         e.preventDefault()
-        // const formImageData = new FormData()
-        // formImageData.append('image', mainImage)
-
-        // console.log(formImageData)
+        const formImageData = new FormData()
+        formImageData.append('main_image', mainImage)
+        formImageData.append('name', "imran")
+        // for (var key of formImageData.entries()) {
+        //     console.log(key[0] + ', ' + key[1]);
+        // }
+        console.log("formdata", formImageData.entries())
 
         let url = `https://dev.funnelliner.com/api/v1/client/products`
         let config = {
             headers: {
                 "X-Requested-With": "XMLHttpRequest",
                 "id": userId,
-                "authorization": token
+                "shop-id": shopId,
+                "authorization": token,
+                "Content-Type": "multipart/form-data"
             }
         }
 
+        console.log("ami", formImageData.get("main_image"))
         let newProduct = await axios.post(url, {
             category_name: formData.category_name,
             product_name: formData.product_name,
             price: formData.price,
             discount: parseInt(formData.discount),
-            // main_image: mainImage,
+            main_image: formImageData.get("main_image"),
             product_code: formData.product_code,
             product_qty: formData.product_qty,
             status: "1",
-            delivery_charge: formData.delivery_charge,
-            inside_dhaka: formData.inside_dhaka,
-            outside_dhaka: formData.outside_dhaka,
+            delivery_charge: deliveryCharge,
+            inside_dhaka: "1",
+            outside_dhaka: "0",
         }, config)
 
         console.log(newProduct)
@@ -115,7 +128,9 @@ export default function CreateProduct() {
                         <Typhography as="h1" className="text-3xl font-bold underline mb-2">Create Product</Typhography>
                         <Typhography as='small' className='heading text-[#f3f4ff] text-xl font-medium opacity-50'>Add your products here</Typhography>
 
-                        <form action="" enctype="multipart/form-data">
+                        <Link href="/product">Product List</Link>
+
+                        <form onSubmit={handleProductAdd} encType="multipart/form-data">
                             <Div className="flex flex-wrap gap-5 mt-5">
                                 <Div className="block mb-5">
                                     <Div className='relative'>
@@ -188,7 +203,7 @@ export default function CreateProduct() {
                                             <BsCircleHalf className='text-lg text-slate-400' />
                                         </Div>
 
-                                        <InputBox onChange={onImageChange} name='main_image' className='placeholder:text-slate-400 placeholder:text-lg block bg-white w-[25vw] border border-slate-300 text-xl font-semibold text-[#11175D] rounded-md py-3 pl-12 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1' type='file' placeholder='Discount' />
+                                        <InputBox onChange={onImageChange} name='main_image' className='placeholder:text-slate-400 placeholder:text-lg block bg-white w-[25vw] border border-slate-300 text-xl font-semibold text-[#11175D] rounded-md py-3 pl-12 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1' type='file' placeholder='Discount' multiple />
                                     </Div>
 
                                     {formErrData.main_image &&
@@ -253,7 +268,7 @@ export default function CreateProduct() {
                                             <BsCircleHalf className='text-lg text-slate-400' />
                                         </Div>
 
-                                        <select name="delivery_charge" id="" className='placeholder:text-slate-400 placeholder:text-lg block bg-white w-[25vw] border border-slate-300 text-xl font-semibold text-[#11175D] rounded-md py-4 pl-12 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1'>
+                                        <select onChange={handledeliveryChargeChange} name="delivery_charge" id="" className='placeholder:text-slate-400 placeholder:text-lg block bg-white w-[25vw] border border-slate-300 text-xl font-semibold text-[#11175D] rounded-md py-4 pl-12 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1'>
                                             <option value="">Delivery Charge</option>
                                             <option value="1">Free</option>
                                             <option value="2">Free or Paid</option>
@@ -267,13 +282,32 @@ export default function CreateProduct() {
                                     }
                                 </Div>
 
+                                {/* <Div className="block mb-5">
+                                    <Div className='relative'>
+                                        <div className="flex items-center mb-4 gap-5">
+                                            <input onChange={() => handledeliverylocationChange(50)} id="default-radio-1" type="radio" value="50" name="default-radio" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" />
+                                            <label htmlFor="default-radio-1" className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Inside Dhaka</label>
+
+                                            <input onChange={() => handledeliverylocationChange(120)} id="default-radio-2" type="radio" value="120" name="default-radio" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" />
+                                            <label htmlFor="default-radio-2" className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Outside Dhaka </label>
+                                        </div>
+
+                                    </Div>
+
+                                    {formErrData.product_name &&
+                                        <ErrorMsg className='bg-red-500 text-left text-white px-5 py-3 mt-3 font-medium text-lg rounded'>
+                                            <Typhography as='h3'>{formErrData.product_name}</Typhography>
+                                        </ErrorMsg>
+                                    }
+                                </Div> */}
+
                                 <Div className="block mb-5">
                                     <Div className='relative'>
                                         <Div className="absolute inset-y-0 left-0 flex items-center pl-5">
                                             <BsCircleHalf className='text-lg text-slate-400' />
                                         </Div>
 
-                                        <InputBox onChange={handleChange} name='inside_dhaka' className='placeholder:text-slate-400 placeholder:text-lg block bg-white w-[25vw] border border-slate-300 text-xl font-semibold text-[#11175D] rounded-md py-4 pl-12 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1' type='text' placeholder='Inside Dhaka' />
+                                        <InputBox onChange={handleChange} name='inside_dhaka' className='placeholder:text-slate-400 placeholder:text-lg block bg-white w-[25vw] border border-slate-300 text-xl font-semibold text-[#11175D] rounded-md py-4 pl-12 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1' type='number' placeholder='inside Dhaka Charge' />
                                     </Div>
 
                                     {formErrData.inside_dhaka &&
@@ -282,14 +316,13 @@ export default function CreateProduct() {
                                         </ErrorMsg>
                                     }
                                 </Div>
-
                                 <Div className="block mb-5">
                                     <Div className='relative'>
                                         <Div className="absolute inset-y-0 left-0 flex items-center pl-5">
                                             <BsCircleHalf className='text-lg text-slate-400' />
                                         </Div>
 
-                                        <InputBox onChange={handleChange} name='outside_dhaka' className='placeholder:text-slate-400 placeholder:text-lg block bg-white w-[25vw] border border-slate-300 text-xl font-semibold text-[#11175D] rounded-md py-4 pl-12 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1' type='text' placeholder='Outside Dhaka' />
+                                        <InputBox onChange={handleChange} name='outside_dhaka' className='placeholder:text-slate-400 placeholder:text-lg block bg-white w-[25vw] border border-slate-300 text-xl font-semibold text-[#11175D] rounded-md py-4 pl-12 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1' type='number' placeholder='Outside Dhaka Charge' />
                                     </Div>
 
                                     {formErrData.outside_dhaka &&
@@ -298,10 +331,13 @@ export default function CreateProduct() {
                                         </ErrorMsg>
                                     }
                                 </Div>
+
+
+
                             </Div>
+                            <Button type="submit" className='bg-[#086FA4] text-white rounded-md py-4 text-xl px-10 mt-5'>Add Product</Button>
                         </form>
 
-                        <Button onClick={handleProductAdd} className='bg-[#086FA4] text-white rounded-md py-4 text-xl px-10 mt-5'>Add Product</Button>
                     </Div>
 
 
