@@ -13,8 +13,6 @@ import { activeUser } from '@/redux/slices/authSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import ErrorMsg from '@/components/ErrorMsg';
-// maboqaq@mailinator.com
-// Pa$$w0rd!
 
 export default function Login() {
     const userAuthData = useSelector(state => state)

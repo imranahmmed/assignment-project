@@ -56,10 +56,6 @@ const Products = () => {
           }
         </Div>
       </Div>
-
-
-
-
     </>
   )
 }

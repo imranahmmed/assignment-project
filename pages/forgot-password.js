@@ -1,7 +1,5 @@
-import { useState, useEffect } from 'react';
-
+import { useState } from 'react';
 import Head from 'next/head'
-import { Inter } from 'next/font/google'
 import styles from '@/styles/Home.module.css'
 import InputBox from '@/components/InputBox'
 import Div from '@/components/Div'
